@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Mangement App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+        integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container ">
+        <h1 class="text-center ">Task Mangement App</h1>
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="form-group">
+                    <input type="text" class="task-title form-control" placeholder="Type your task...">
+                    <div>
+                        <button class="btn btn-primary mt-3">Add Task</button>
+                        <button class="btn btn-warning mt-3">Update Task</button>
+                        <button class="btn btn-danger mt-3">Delete Task</button>
+                        <button class="btn btn-primary mt-3">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h5 class="text-center mt-3">complete <span class="completed-tasks">0</span> task out of <span
+                class="total-task">0</span> </h5>
+        <div class="card card-body tast-container mt-3">
+            <div class="task-item" id="task-0">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h5>Task 1</h5>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="#" class="completed-task float-right">
+                            <i class="fas fa-check"></i>
+                        </a>
+                        <a href="#" class="edit-task float-right mr-2">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
