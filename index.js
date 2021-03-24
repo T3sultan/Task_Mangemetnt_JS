@@ -11,7 +11,7 @@ const StrorageCtrl = (function () {
 
 //taskctrl function to control data related part
 const TaskCtrl = (function () {
-    const data = {
+    let data = {
         tasks: [
             { id: 0, title: 'task 1', comleted: false },
             { id: 1, title: 'task 2', comleted: false },
@@ -31,6 +31,23 @@ const TaskCtrl = (function () {
     return {
         getTasks() {
             return data.tasks
+        },
+        addTask(taskTitle){
+            const id = data.tasks.length>0 ? data.tasks.length : 0
+            const task ={
+                id,
+                title:taskTitle,
+                comleted:false
+            };
+            const dataWithUpdateTask = {
+                ...data,
+                tasks : [...data.tasks,task]
+            }
+           
+            data= dataWithUpdateTask;
+            return task;
+
+
         }
     }
 
@@ -77,15 +94,19 @@ const UICtrl = (function () {
 
 
         },
+        clearFields(){
+            document.querySelector(selectors.taskTitle).value ='';
 
-        populationTask(task) {
+        },
+
+        populationTask(tasks) {
             let output = '';
-            task.forEach(task => {
+            tasks.forEach(tasks => {
                 output += `
-                <div class="task-item" id="task-${task.id}">
+                <div class="task-item" id="task-${tasks.id}">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h5>${task.title}</h5>
+                        <h5>${tasks.title}</h5>
                     </div>
                     <div class="col-sm-6">
                         <a href="#" class="completed-task float-right">
@@ -134,10 +155,17 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
 
     function TaskAddSubmit(e){
         e.preventDefault();
-        const tasktitle = UICtrl.getTitleInput();
-        if(tasktitle.trim() ===''){
-            UICtrl.showAlert('Please provide necessary Information','warning');
+        const taskTitle = UICtrl.getTitleInput();
+        if(taskTitle.trim() ===''){
+            UICtrl.showAlert('Please provide necessary Information','alert alert-warning');
 
+        }else
+        {
+           //data storage control TaskCtrl
+           const task =   TaskCtrl.addTask(taskTitle);
+           UICtrl.clearFields();
+           console.log(task)
+         
         }
 
     }
