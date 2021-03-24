@@ -32,19 +32,19 @@ const TaskCtrl = (function () {
         getTasks() {
             return data.tasks
         },
-        addTask(taskTitle){
-            const id = data.tasks.length>0 ? data.tasks.length : 0
-            const task ={
+        addTask(taskTitle) {
+            const id = data.tasks.length > 0 ? data.tasks.length : 0
+            const task = {
                 id,
-                title:taskTitle,
-                comleted:false
+                title: taskTitle,
+                comleted: false
             };
             const dataWithUpdateTask = {
                 ...data,
-                tasks : [...data.tasks,task]
+                tasks: [...data.tasks, task]
             }
-           
-            data= dataWithUpdateTask;
+
+            data = dataWithUpdateTask;
             return task;
 
 
@@ -63,7 +63,7 @@ const UICtrl = (function () {
         updateTask: '.update-task',
         deleteTask: '.delete-task',
         backbtn: '.backbtn',
-        taskTitle:'.task-title'
+        taskTitle: '.task-title'
     };
 
     return {
@@ -85,28 +85,55 @@ const UICtrl = (function () {
 
 
         },
-        getTitleInput(){
+        getTitleInput() {
             return document.querySelector(selectors.taskTitle).value;
 
         },
-        showAlert(msg,className){
-            console.log(msg,className)
+        showAlert(msg, className) {
+            console.log(msg, className)
 
 
         },
-        clearFields(){
-            document.querySelector(selectors.taskTitle).value ='';
+        clearFields() {
+            document.querySelector(selectors.taskTitle).value = '';
 
         },
-
-        populationTask(tasks) {
+        populateTask(task) {
             let output = '';
-            tasks.forEach(tasks => {
+            output += `
+            <div class="task-item" id="task-${task.id}">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h5>${task.title}</h5>
+                </div>
+                <div class="col-sm-6">
+                    <a href="#" class="completed-task float-right">
+                        <i class="fas fa-check"></i>
+                    </a>
+                    <a href="#" class="edit-task float-right mr-2">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+            
+            `;
+            document.querySelector(selectors.taskContainer).insertAdjacentHTML('beforeend',output);
+
+        },
+
+        populateTasks(tasks) {
+            let output = '';
+            tasks.forEach(task => {
                 output += `
-                <div class="task-item" id="task-${tasks.id}">
+                <div class="task-item" id="task-${task.id}">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h5>${tasks.title}</h5>
+                        <h5>${task.title}</h5>
                     </div>
                     <div class="col-sm-6">
                         <a href="#" class="completed-task float-right">
@@ -153,19 +180,18 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
         //     .addEventListener('click', editTask);
     };
 
-    function TaskAddSubmit(e){
+    function TaskAddSubmit(e) {
         e.preventDefault();
         const taskTitle = UICtrl.getTitleInput();
-        if(taskTitle.trim() ===''){
-            UICtrl.showAlert('Please provide necessary Information','alert alert-warning');
+        if (taskTitle.trim() === '') {
+            UICtrl.showAlert('Please provide necessary Information', 'alert alert-warning');
 
-        }else
-        {
-           //data storage control TaskCtrl
-           const task =   TaskCtrl.addTask(taskTitle);
-           UICtrl.clearFields();
-           console.log(task)
-         
+        } else {
+            //data storage control TaskCtrl
+            const task = TaskCtrl.addTask(taskTitle);
+            UICtrl.clearFields();
+            UICtrl.populateTask(task);
+
         }
 
     }
@@ -176,7 +202,7 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
 
             const task = TaskCtrl.getTasks();
             //populating task in UI
-            UICtrl.populationTask(task);
+            UICtrl.populateTasks(task);
             //show edit state
 
             //UICtrl.showEditState()
