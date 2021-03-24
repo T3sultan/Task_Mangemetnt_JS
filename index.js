@@ -40,7 +40,44 @@ const TaskCtrl = (function () {
 
 //uictrl function to ui related to task
 const UICtrl = (function () {
+    const selectors = {
+        taskContainer: '.task-container',
+        addTask: '.add-task',
+        updateTask: '.update-task',
+        deleteTask: '.delete-task',
+        backbtn: '.backbtn',
+        taskTitle:'.task-title'
+    };
+
     return {
+        getSelector() {
+            return selectors;
+        },
+        showEditState() {
+            document.querySelector(selectors.addTask).style.display = 'none',
+                document.querySelector(selectors.updateTask).style.display = 'block',
+                document.querySelector(selectors.deleteTask).style.display = 'block',
+                document.querySelector(selectors.backbtn).style.display = 'block'
+
+        },
+        clearEditState() {
+            document.querySelector(selectors.addTask).style.display = 'block',
+                document.querySelector(selectors.updateTask).style.display = 'none',
+                document.querySelector(selectors.deleteTask).style.display = 'none',
+                document.querySelector(selectors.backbtn).style.display = 'none'
+
+
+        },
+        getTitleInput(){
+            return document.querySelector(selectors.taskTitle).value;
+
+        },
+        showAlert(msg,className){
+            console.log(msg,className)
+
+
+        },
+
         populationTask(task) {
             let output = '';
             task.forEach(task => {
@@ -66,7 +103,7 @@ const UICtrl = (function () {
 
                 `;
             });
-            document.querySelector('.task-container').innerHTML = output;
+            document.querySelector(selectors.taskContainer).innerHTML = output;
 
         }
     }
@@ -78,7 +115,52 @@ const UICtrl = (function () {
 
 //appctrl function to do connection between to different part
 const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
-    const task = TaskCtrl.getTasks();
-    UICtrl.populationTask(task)
+    const loadEventListener = function () {
+        const selectors = UICtrl.getSelector();
+
+        document.querySelector(selectors.addTask)
+            .addEventListener('click', TaskAddSubmit);
+        // document.querySelector(selectors.updateTask)
+        //     .addEventListener('click', updateTaskSubmit);
+        // document.querySelector(selectors.deleteTask)
+        //     .addEventListener('click', deleteTaskSubmit);
+        // document.querySelector(selectors.backbtn)
+        //     .addEventListener('click', backToAddTaskState);
+        // document.querySelector(selectors.taskContainer)
+        //     .addEventListener('click', completedTask);
+        // document.querySelector(UICtrl.getSelector().taskContainer)
+        //     .addEventListener('click', editTask);
+    };
+
+    function TaskAddSubmit(e){
+        e.preventDefault();
+        const tasktitle = UICtrl.getTitleInput();
+        if(tasktitle.trim() ===''){
+            UICtrl.showAlert('Please provide necessary Information','warning');
+
+        }
+
+    }
+
+    return {
+        init() {
+            //getting tasks from data centers
+
+            const task = TaskCtrl.getTasks();
+            //populating task in UI
+            UICtrl.populationTask(task);
+            //show edit state
+
+            //UICtrl.showEditState()
+            //clear edit state
+            UICtrl.clearEditState()
+            //calling Event listeners
+            loadEventListener();
+
+
+        }
+    };
+
 
 })(TaskCtrl, UICtrl, StrorageCtrl);
+AppCtrl.init();
