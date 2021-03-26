@@ -12,7 +12,14 @@ const StrorageCtrl = (function () {
 //taskctrl function to control data related part
 const TaskCtrl = (function () {
     let data = {
-        tasks: []
+        tasks: [
+            {
+                id: 0,
+                title: 'task 1',
+                completed: false
+            }
+
+        ]
 
     };
     return {
@@ -35,6 +42,17 @@ const TaskCtrl = (function () {
             return task;
 
 
+        },
+        completedTask(id){
+             data.tasks=data.tasks.map(task=>{
+                 if(task.id===id){
+                     task.completed=true;
+                     return task;
+                 }
+                 else{
+                     return task;
+                 }
+             })
         }
     }
 
@@ -53,11 +71,11 @@ const UICtrl = (function () {
         taskTitle: '.task-title'
     };
 
-    const hideTaskContainer = function(){
-        document.querySelector(selectors.taskContainer).style.display='none';
+    const hideTaskContainer = function () {
+        document.querySelector(selectors.taskContainer).style.display = 'none';
     }
-    const showTaskContainer = function(){
-        document.querySelector(selectors.taskContainer).style.display='block';
+    const showTaskContainer = function () {
+        document.querySelector(selectors.taskContainer).style.display = 'block';
     }
 
     return {
@@ -179,8 +197,8 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
         //     .addEventListener('click', deleteTaskSubmit);
         // document.querySelector(selectors.backbtn)
         //     .addEventListener('click', backToAddTaskState);
-        // document.querySelector(selectors.taskContainer)
-        //     .addEventListener('click', completedTask);
+        document.querySelector(selectors.taskContainer)
+            .addEventListener('click', completedTask);
         // document.querySelector(UICtrl.getSelector().taskContainer)
         //     .addEventListener('click', editTask);
     };
@@ -197,6 +215,15 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
             UICtrl.clearFields();
             UICtrl.populateTask(task);
 
+        }
+
+    }
+    function completedTask(e) {
+        if (e.target.parentElement.classList.contains('completed-task')) {
+            const targetId = e.target.parentElement.parentElement.parentElement.parentElement
+                .id;
+            const id = Number(targetId.split('-')[1]);
+           TaskCtrl.completedTask(id);
         }
 
     }
