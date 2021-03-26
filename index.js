@@ -46,7 +46,7 @@ const TaskCtrl = (function () {
         completedTask(id){
              data.tasks=data.tasks.map(task=>{
                  if(task.id===id){
-                     task.completed=true;
+                     task.completed=!task.comleted;
                      return task;
                  }
                  else{
@@ -111,13 +111,14 @@ const UICtrl = (function () {
 
         },
         populateTask(task) {
+            const{id,title} =task;
             showTaskContainer();
             let output = '';
             output += `
-            <div class="task-item" id="task-${task.id}">
+            <div class="task-item" id="task-${id}">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5>${task.title}</h5>
+                    </h5>${title}</h5>
                 </div>
                 <div class="col-sm-6">
                     <a href="#" class="completed-task float-right">
@@ -140,6 +141,7 @@ const UICtrl = (function () {
         },
 
         populateTasks(tasks) {
+          //  const {id,title,completed} = tasks
             if (tasks.length === 0) {
                 //hiding task container there is no tasks
                 hideTaskContainer();
@@ -148,12 +150,12 @@ const UICtrl = (function () {
                 //showing task container there is tasks
                 showTaskContainer();
                 let output = '';
-                tasks.forEach(task => {
+                tasks.forEach(({id,title,completed}) => {
                     output += `
-                    <div class="task-item" id="task-${task.id}">
+                    <div class="task-item" id="task-${id}">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h5>${task.title}</h5>
+                            <h5  class =${completed === true ? 'completed-task': ''}>${title}</h5>
                         </div>
                         <div class="col-sm-6">
                             <a href="#" class="completed-task float-right">
@@ -220,10 +222,16 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
     }
     function completedTask(e) {
         if (e.target.parentElement.classList.contains('completed-task')) {
-            const targetId = e.target.parentElement.parentElement.parentElement.parentElement
-                .id;
+            const targetId = e.target.parentElement.parentElement.parentElement.parentElement.id;
+             
             const id = Number(targetId.split('-')[1]);
+            //update completed property in data storage
            TaskCtrl.completedTask(id);
+           //getting tasks
+           
+           const tasks = TaskCtrl.getTasks();
+           //update UI
+           UICtrl.populateTasks(tasks);
         }
 
     }
