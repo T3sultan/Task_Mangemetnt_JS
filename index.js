@@ -143,7 +143,8 @@ const UICtrl = (function () {
         backbtn: '.backbtn',
         taskTitle: '.task-title',
         completedTask: '.completed-tasks',
-        totalTask: '.total-tasks'
+        totalTask: '.total-tasks',
+        alert:'.alert'
     };
 
     const hideTaskContainer = function () {
@@ -177,8 +178,23 @@ const UICtrl = (function () {
 
         },
         showAlert(msg, className) {
-            console.log(msg, className)
+            const div = document.createElement('div');
+            div.textContent=msg;
+            div.className=className;
+            document.querySelector(selectors.taskContainer)
+            .insertAdjacentElement('beforebegin',div);
+            if(document.querySelector(selectors.alert)){
+                this.clearAlert();
+            }
 
+
+        },
+        clearAlert(){
+            setTimeout(()=>{
+                document.querySelector(selectors.alert).remove()
+
+            },2000)
+           
 
         },
         clearFields() {
