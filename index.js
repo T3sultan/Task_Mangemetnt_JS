@@ -4,6 +4,31 @@
 //appctrl
 //storagectrl function to storage part
 const StrorageCtrl = (function () {
+    return {
+        addTask(task){
+            let tasks;
+            if(localStorage.getItem('tasks')===null){
+                tasks=[];
+                tasks.push(task);
+
+            }else{
+              tasks = JSON.parse(localStorage.getItem('tasks'));
+               tasks.push(task);
+            }
+            localStorage.setItem('tasks',JSON.stringify(tasks))
+
+        },
+        getTasks(){
+            let tasks;
+            if(localStorage.getItem('tasks')===null){
+                tasks=[];
+
+            }else{
+                tasks=JSON.parse(localStorage.getItem('tasks'));
+            }
+            return tasks;
+        }
+    }
 
 })();
 
@@ -12,14 +37,7 @@ const StrorageCtrl = (function () {
 //taskctrl function to control data related part
 const TaskCtrl = (function () {
     let data = {
-        tasks: [
-            {
-                id: 0,
-                title: 'task 1',
-                completed: false
-            }
-
-        ],
+        tasks: StrorageCtrl.getTasks(),
         currentTask:null
 
     };
@@ -260,6 +278,10 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
         } else {
             //data storage control TaskCtrl
             const task = TaskCtrl.addTask(taskTitle);
+           
+            //update to localstorage
+            StrorageCtrl.addTask(task);
+
             UICtrl.clearFields();
              //get total task count
              const totalTasks = TaskCtrl.getTotalTaskCount();
