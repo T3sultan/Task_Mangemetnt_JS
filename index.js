@@ -63,6 +63,10 @@ const TaskCtrl = (function () {
             data.currentTask=taskToEdit
 
         },
+        getCurrentTask(){
+            return data.currentTask
+
+        },
         updateItem(taskTitle){
             let foundTask = null;
          data.tasks =  data.tasks.map(task=>{
@@ -76,6 +80,12 @@ const TaskCtrl = (function () {
                 }
             });
             return foundTask;
+        },
+        deleteTask(currentTask){
+          const tasksAfterDeletion = data.tasks.filter(task=>task.id !== currentTask.id)
+          console.log(tasksAfterDeletion);
+          data.tasks= tasksAfterDeletion
+
         }
     }
 
@@ -222,8 +232,8 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
             .addEventListener('click', TaskAddSubmit);
         document.querySelector(selectors.updateTask)
             .addEventListener('click', updateTaskSubmit);
-        // document.querySelector(selectors.deleteTask)
-        //     .addEventListener('click', deleteTaskSubmit);
+        document.querySelector(selectors.deleteTask)
+            .addEventListener('click', deleteTaskSubmit);
         // document.querySelector(selectors.backbtn)
         //     .addEventListener('click', backToAddTaskState);
         document.querySelector(selectors.taskContainer)
@@ -297,6 +307,20 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
        UICtrl.populateTasks(tasks);
     
 
+    }
+    function deleteTaskSubmit(e){
+        //prevent Default action
+        e.preventDefault()
+        //get editedTask/currentTask
+       const currentTask = TaskCtrl.getCurrentTask();
+       //deleted form storage
+       TaskCtrl.deleteTask(currentTask);
+       const tasks = TaskCtrl.getTasks()
+       UICtrl.populateTasks(tasks)
+       //clear form field
+       UICtrl.clearFields();
+       //clear edit state
+       UICtrl.clearEditState()
     }
 
     return {
