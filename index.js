@@ -5,40 +5,46 @@
 //storagectrl function to storage part
 const StrorageCtrl = (function () {
     return {
-        addTask(task){
+        addTask(task) {
             let tasks;
-            if(localStorage.getItem('tasks')===null){
-                tasks=[];
+            if (localStorage.getItem('tasks') === null) {
+                tasks = [];
                 tasks.push(task);
 
-            }else{
-              tasks = JSON.parse(localStorage.getItem('tasks'));
-               tasks.push(task);
+            } else {
+                tasks = JSON.parse(localStorage.getItem('tasks'));
+                tasks.push(task);
             }
-            localStorage.setItem('tasks',JSON.stringify(tasks))
+            localStorage.setItem('tasks', JSON.stringify(tasks))
 
         },
-        getTasks(){
+        getTasks() {
             let tasks;
-            if(localStorage.getItem('tasks')===null){
-                tasks=[];
+            if (localStorage.getItem('tasks') === null) {
+                tasks = [];
 
-            }else{
-                tasks=JSON.parse(localStorage.getItem('tasks'));
+            } else {
+                tasks = JSON.parse(localStorage.getItem('tasks'));
             }
             return tasks;
         },
-        updateTask(updatedTask){
+        updatedTask(updatedTask) {
             let tasks = JSON.parse(localStorage.getItem('tasks'));
-          const taskAfterUpdates =  tasks.filter(task=>{
-                 if(task.id === updatedTask.id){
-                     task.title=updatedTask.title;
-                     return task;
-                 }else{
-                     return task;
-                 }
-             })
-            localStorage.setItem('tasks',JSON.stringify(taskAfterUpdates))
+            const taskAfterUpdates = tasks.filter(task => {
+                if (task.id === updatedTask.id) {
+                    task.title = updatedTask.title;
+                    return task;
+                } else {
+                    return task;
+                }
+            })
+            localStorage.setItem('tasks', JSON.stringify(taskAfterUpdates))
+        },
+        deletedTask(taskToDelete) {
+            let tasks = JSON.parse(localStorage.getItem('tasks'))
+            const taskAfterDeletion = tasks.filter(task => task.id !== taskToDelete.id);
+            tasks = taskAfterDeletion;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
         }
     }
 
@@ -51,7 +57,7 @@ const StrorageCtrl = (function () {
 const TaskCtrl = (function () {
     let data = {
         tasks: StrorageCtrl.getTasks(),
-        currentTask:null
+        currentTask: null
 
     };
     return {
@@ -75,50 +81,50 @@ const TaskCtrl = (function () {
 
 
         },
-        completedTask(id){
-             data.tasks=data.tasks.map(task=>{
-                 if(task.id===id){
-                     task.completed=!task.comleted;
-                     return task;
-                 }
-                 else{
-                     return task;
-                 }
-             })
+        completedTask(id) {
+            data.tasks = data.tasks.map(task => {
+                if (task.id === id) {
+                    task.completed = !task.comleted;
+                    return task;
+                }
+                else {
+                    return task;
+                }
+            })
         },
-        getTaskById(id){
-          return data.tasks.find(task=>task.id === id);
+        getTaskById(id) {
+            return data.tasks.find(task => task.id === id);
 
         },
-        setCurrentTask(taskToEdit){
-            data.currentTask=taskToEdit
+        setCurrentTask(taskToEdit) {
+            data.currentTask = taskToEdit
 
         },
-        getCurrentTask(){
+        getCurrentTask() {
             return data.currentTask
 
         },
-        updateItem(taskTitle){
+        updateItem(taskTitle) {
             let foundTask = null;
-         data.tasks =  data.tasks.map(task=>{
-                if(task.id === data.currentTask.id){
+            data.tasks = data.tasks.map(task => {
+                if (task.id === data.currentTask.id) {
                     task.title = taskTitle;
                     foundTask = task;
                     return task;
-                }else{
+                } else {
                     return task;
 
                 }
             });
             return foundTask;
         },
-        deleteTask(currentTask){
-          const tasksAfterDeletion = data.tasks.filter(task=>task.id !== currentTask.id)
-          console.log(tasksAfterDeletion);
-          data.tasks= tasksAfterDeletion
+        deleteTask(currentTask) {
+            const tasksAfterDeletion = data.tasks.filter(task => task.id !== currentTask.id)
+            console.log(tasksAfterDeletion);
+            data.tasks = tasksAfterDeletion
 
         },
-        getTotalTaskCount(){
+        getTotalTaskCount() {
             return data.tasks.length;
         }
     }
@@ -136,8 +142,8 @@ const UICtrl = (function () {
         deleteTask: '.delete-task',
         backbtn: '.backbtn',
         taskTitle: '.task-title',
-        completedTask:'.completed-tasks',
-        totalTask:'.total-tasks'
+        completedTask: '.completed-tasks',
+        totalTask: '.total-tasks'
     };
 
     const hideTaskContainer = function () {
@@ -179,12 +185,12 @@ const UICtrl = (function () {
             document.querySelector(selectors.taskTitle).value = '';
 
         },
-        populateForm(taskTitle){
-            document.querySelector(selectors.taskTitle).value =taskTitle;
+        populateForm(taskTitle) {
+            document.querySelector(selectors.taskTitle).value = taskTitle;
 
         },
         populateTask(task) {
-            const{id,title} =task;
+            const { id, title } = task;
             showTaskContainer();
             let output = '';
             output += `
@@ -214,7 +220,7 @@ const UICtrl = (function () {
         },
 
         populateTasks(tasks) {
-          //  const {id,title,completed} = tasks
+            //  const {id,title,completed} = tasks
             if (tasks.length === 0) {
                 //hiding task container there is no tasks
                 hideTaskContainer();
@@ -223,12 +229,12 @@ const UICtrl = (function () {
                 //showing task container there is tasks
                 showTaskContainer();
                 let output = '';
-                tasks.forEach(({id,title,completed}) => {
+                tasks.forEach(({ id, title, completed }) => {
                     output += `
                     <div class="task-item" id="task-${id}">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h5  class =${completed === true ? 'completed-task': ''}>${title}</h5>
+                            <h5  class =${completed === true ? 'completed-task' : ''}>${title}</h5>
                         </div>
                         <div class="col-sm-6">
                             <a href="#" class="completed-task float-right">
@@ -252,8 +258,8 @@ const UICtrl = (function () {
 
 
         },
-        showTotalTaskCount(totalTasks){
-            document.querySelector(selectors.totalTask).textContent=totalTasks;
+        showTotalTaskCount(totalTasks) {
+            document.querySelector(selectors.totalTask).textContent = totalTasks;
 
         }
     }
@@ -291,13 +297,13 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
         } else {
             //data storage control TaskCtrl
             const task = TaskCtrl.addTask(taskTitle);
-           
+
             //update to localstorage
             StrorageCtrl.addTask(task);
 
             UICtrl.clearFields();
-             //get total task count
-             const totalTasks = TaskCtrl.getTotalTaskCount();
+            //get total task count
+            const totalTasks = TaskCtrl.getTotalTaskCount();
             //update total task count
             UICtrl.showTotalTaskCount(totalTasks)
             UICtrl.populateTask(task);
@@ -308,29 +314,29 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
     function completedTask(e) {
         if (e.target.parentElement.classList.contains('completed-task')) {
             const targetId = e.target.parentElement.parentElement.parentElement.parentElement.id;
-             
+
             const id = Number(targetId.split('-')[1]);
             //update completed property in data storage
-           TaskCtrl.completedTask(id);
-           //getting tasks
-           
-           const tasks = TaskCtrl.getTasks();
-           //update UI
-           UICtrl.populateTasks(tasks);
+            TaskCtrl.completedTask(id);
+            //getting tasks
+
+            const tasks = TaskCtrl.getTasks();
+            //update UI
+            UICtrl.populateTasks(tasks);
         }
 
     }
-    function editTask(e){
-        if(e.target.parentElement.classList.contains('edit-task')){
-            const targetId=e.target.parentElement.parentElement.parentElement.parentElement.id;
+    function editTask(e) {
+        if (e.target.parentElement.classList.contains('edit-task')) {
+            const targetId = e.target.parentElement.parentElement.parentElement.parentElement.id;
             //console.log(id)
             //show edit task
             UICtrl.showEditState();
             //getting id
-            const id =Number(targetId.split('-')[1]);
+            const id = Number(targetId.split('-')[1]);
 
             const taskToUpdate = TaskCtrl.getTaskById(id);
-           // console.log(taskToUpdate)
+            // console.log(taskToUpdate)
 
             //get state in data storage
             TaskCtrl.setCurrentTask(taskToUpdate);
@@ -340,38 +346,41 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
             UICtrl.populateForm(taskToUpdate.title)
         }
     }
-    function updateTaskSubmit(e){
+    function updateTaskSubmit(e) {
         e.preventDefault();
         const titleInput = UICtrl.getTitleInput();
         //updating to our data storage
-       const updatedTask = TaskCtrl.updateItem(titleInput);
-       StrorageCtrl.updateTask(updatedTask);
-       //clear form field
-       UICtrl.clearFields();
-       //clear edit state
-       UICtrl.clearEditState();
-       //get  task
-       const tasks = TaskCtrl.getTasks();
-       //Update UI
-       UICtrl.populateTasks(tasks);
-    
+        const updatedTask = TaskCtrl.updateItem(titleInput);
+        StrorageCtrl.updatedTask(updatedTask);
+        //clear form field
+        UICtrl.clearFields();
+        //clear edit state
+        UICtrl.clearEditState();
+        //get  task
+        const tasks = TaskCtrl.getTasks();
+        //Update UI
+        UICtrl.populateTasks(tasks);
+
 
     }
-    function deleteTaskSubmit(e){
+    function deleteTaskSubmit(e) {
         //prevent Default action
         e.preventDefault()
         //get editedTask/currentTask
-       const currentTask = TaskCtrl.getCurrentTask();
-       //deleted form storage
-       TaskCtrl.deleteTask(currentTask);
-       const tasks = TaskCtrl.getTasks()
-       UICtrl.populateTasks(tasks)
-       //clear form field
-       UICtrl.clearFields();
-       //clear edit state
-       UICtrl.clearEditState()
+        const currentTask = TaskCtrl.getCurrentTask();
+        //deleted form storage
+        TaskCtrl.deleteTask(currentTask);
+        //delete task from local storage
+        StrorageCtrl.deletedTask(currentTask)
+
+        const tasks = TaskCtrl.getTasks()
+        UICtrl.populateTasks(tasks)
+        //clear form field
+        UICtrl.clearFields();
+        //clear edit state
+        UICtrl.clearEditState()
     }
-    function backToAddTaskState(e){
+    function backToAddTaskState(e) {
         e.preventDefault();
         //clear edit state
         UICtrl.clearEditState();
