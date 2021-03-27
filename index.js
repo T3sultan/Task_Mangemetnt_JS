@@ -86,6 +86,9 @@ const TaskCtrl = (function () {
           console.log(tasksAfterDeletion);
           data.tasks= tasksAfterDeletion
 
+        },
+        getTotalTaskCount(){
+            return data.tasks.length;
         }
     }
 
@@ -101,7 +104,9 @@ const UICtrl = (function () {
         updateTask: '.update-task',
         deleteTask: '.delete-task',
         backbtn: '.backbtn',
-        taskTitle: '.task-title'
+        taskTitle: '.task-title',
+        completedTask:'.completed-tasks',
+        totalTask:'.total-tasks'
     };
 
     const hideTaskContainer = function () {
@@ -215,6 +220,10 @@ const UICtrl = (function () {
             }
 
 
+        },
+        showTotalTaskCount(totalTasks){
+            document.querySelector(selectors.totalTask).textContent=totalTasks;
+
         }
     }
 
@@ -252,6 +261,10 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
             //data storage control TaskCtrl
             const task = TaskCtrl.addTask(taskTitle);
             UICtrl.clearFields();
+             //get total task count
+             const totalTasks = TaskCtrl.getTotalTaskCount();
+            //update total task count
+            UICtrl.showTotalTaskCount(totalTasks)
             UICtrl.populateTask(task);
 
         }
@@ -332,6 +345,11 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
 
     return {
         init() {
+            //get total task count
+            const totalTasks = TaskCtrl.getTotalTaskCount();
+            //console.log(totalTasks);
+            UICtrl.showTotalTaskCount(totalTasks);
+
             //getting tasks from data centers
 
             const task = TaskCtrl.getTasks();
