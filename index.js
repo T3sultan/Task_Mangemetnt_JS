@@ -19,7 +19,8 @@ const TaskCtrl = (function () {
                 completed: false
             }
 
-        ]
+        ],
+        currentTask:null
 
     };
     return {
@@ -53,6 +54,14 @@ const TaskCtrl = (function () {
                      return task;
                  }
              })
+        },
+        getTaskById(id){
+          return data.tasks.find(task=>task.id === id);
+
+        },
+        setCurrentTask(taskToEdit){
+            data.currentTask=taskToEdit
+
         }
     }
 
@@ -108,6 +117,10 @@ const UICtrl = (function () {
         },
         clearFields() {
             document.querySelector(selectors.taskTitle).value = '';
+
+        },
+        populateForm(taskTitle){
+            document.querySelector(selectors.taskTitle).value =taskTitle;
 
         },
         populateTask(task) {
@@ -201,8 +214,8 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
         //     .addEventListener('click', backToAddTaskState);
         document.querySelector(selectors.taskContainer)
             .addEventListener('click', completedTask);
-        // document.querySelector(UICtrl.getSelector().taskContainer)
-        //     .addEventListener('click', editTask);
+        document.querySelector(UICtrl.getSelector().taskContainer)
+            .addEventListener('click', editTask);
     };
 
     function TaskAddSubmit(e) {
@@ -234,6 +247,26 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
            UICtrl.populateTasks(tasks);
         }
 
+    }
+    function editTask(e){
+        if(e.target.parentElement.classList.contains('edit-task')){
+            const targetId=e.target.parentElement.parentElement.parentElement.parentElement.id;
+            //console.log(id)
+            //show edit task
+            UICtrl.showEditState();
+            //getting id
+            const id =Number(targetId.split('-')[1]);
+
+            const taskToUpdate = TaskCtrl.getTaskById(id);
+           // console.log(taskToUpdate)
+
+            //get state in data storage
+            TaskCtrl.setCurrentTask(taskToUpdate);
+
+
+            //populate form in edit task
+            UICtrl.populateForm(taskToUpdate.title)
+        }
     }
 
     return {
