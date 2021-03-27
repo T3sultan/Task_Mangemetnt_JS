@@ -234,8 +234,8 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
             .addEventListener('click', updateTaskSubmit);
         document.querySelector(selectors.deleteTask)
             .addEventListener('click', deleteTaskSubmit);
-        // document.querySelector(selectors.backbtn)
-        //     .addEventListener('click', backToAddTaskState);
+        document.querySelector(selectors.backbtn)
+            .addEventListener('click', backToAddTaskState);
         document.querySelector(selectors.taskContainer)
             .addEventListener('click', completedTask);
         document.querySelector(UICtrl.getSelector().taskContainer)
@@ -321,6 +321,13 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
        UICtrl.clearFields();
        //clear edit state
        UICtrl.clearEditState()
+    }
+    function backToAddTaskState(e){
+        e.preventDefault();
+        //clear edit state
+        UICtrl.clearEditState();
+        //clear form
+        UICtrl.clearFields();
     }
 
     return {
