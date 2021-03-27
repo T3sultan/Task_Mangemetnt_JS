@@ -27,8 +27,21 @@ const StrorageCtrl = (function () {
                 tasks=JSON.parse(localStorage.getItem('tasks'));
             }
             return tasks;
+        },
+        updateTask(updatedTask){
+            let tasks = JSON.parse(localStorage.getItem('tasks'));
+          const taskAfterUpdates =  tasks.filter(task=>{
+                 if(task.id === updatedTask.id){
+                     task.title=updatedTask.title;
+                     return task;
+                 }else{
+                     return task;
+                 }
+             })
+            localStorage.setItem('tasks',JSON.stringify(taskAfterUpdates))
         }
     }
+
 
 })();
 
@@ -332,6 +345,7 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
         const titleInput = UICtrl.getTitleInput();
         //updating to our data storage
        const updatedTask = TaskCtrl.updateItem(titleInput);
+       StrorageCtrl.updateTask(updatedTask);
        //clear form field
        UICtrl.clearFields();
        //clear edit state
