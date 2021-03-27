@@ -62,6 +62,20 @@ const TaskCtrl = (function () {
         setCurrentTask(taskToEdit){
             data.currentTask=taskToEdit
 
+        },
+        updateItem(taskTitle){
+            let foundTask = null;
+         data.tasks =  data.tasks.map(task=>{
+                if(task.id === data.currentTask.id){
+                    task.title = taskTitle;
+                    foundTask = task;
+                    return task;
+                }else{
+                    return task;
+
+                }
+            });
+            return foundTask;
         }
     }
 
@@ -206,8 +220,8 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
 
         document.querySelector(selectors.addTask)
             .addEventListener('click', TaskAddSubmit);
-        // document.querySelector(selectors.updateTask)
-        //     .addEventListener('click', updateTaskSubmit);
+        document.querySelector(selectors.updateTask)
+            .addEventListener('click', updateTaskSubmit);
         // document.querySelector(selectors.deleteTask)
         //     .addEventListener('click', deleteTaskSubmit);
         // document.querySelector(selectors.backbtn)
@@ -267,6 +281,22 @@ const AppCtrl = (function (TaskCtrl, UICtrl, StrorageCtrl) {
             //populate form in edit task
             UICtrl.populateForm(taskToUpdate.title)
         }
+    }
+    function updateTaskSubmit(e){
+        e.preventDefault();
+        const titleInput = UICtrl.getTitleInput();
+        //updating to our data storage
+       const updatedTask = TaskCtrl.updateItem(titleInput);
+       //clear form field
+       UICtrl.clearFields();
+       //clear edit state
+       UICtrl.clearEditState();
+       //get  task
+       const tasks = TaskCtrl.getTasks();
+       //Update UI
+       UICtrl.populateTasks(tasks);
+    
+
     }
 
     return {
